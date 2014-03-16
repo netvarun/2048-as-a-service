@@ -2,8 +2,8 @@
 =================
 
 Build powerful 2048 gameplay apps with our simple 2048-as-a-service API.
-Inegrate 2048-functionality into your bash scripts, SoLoMo (social-local-mobile) apps and
-internet-of-things apps!
+Integrate 2048-functionality into your bash scripts, SoLoMo (social-local-mobile) apps and
+internet-of-things devices!
 
 
 # The API
@@ -11,8 +11,7 @@ internet-of-things apps!
 
 ## GET /start
 
-Start a new game sessions.
-Returns a `session_id`.
+Start a new game session and returns a `session_id`.
 All sessions last a maximum of 1 hour.
 
 
@@ -23,21 +22,22 @@ All sessions last a maximum of 1 hour.
 
 ## GET /state/:session_id
 
-Get the 2048 game board of the specific state of the 2048 game by specifiying the session_id you received
-when you started the game.
+Get the current game board state for the specified `session_id`.
 
 
 #### example request
 
     $ curl {{localhost}}/state/5a16a6cf460e84e2f6c581bcf68e719e40ef671e
 
-Responds with **404** if session_id does not exist
+Responds with **404** if `:session_id` does not exist
+
 
 ## GET /state/:session_id/move/:move
 
 The actual gameplay functionality.
-`:session_id` is the session_id of the game that you got when you started the game.
+`:session_id` is the session id of the game that you got when you started the game.
 `:move` is the next move entered by the user.
+
 There are 4 possible values for `:move`:
 `1` for UP
 `2` for DOWN
@@ -48,8 +48,8 @@ There are 4 possible values for `:move`:
 
     $ curl {{localhost}}/state/5a16a6cf460e84e2f6c581bcf68e719e40ef671e/move/1
 
-Responds with **404** if session_id does not exist
-Responds with **501** if invalid move specified
+Responds with **404** if `session_id` does not exist
+Responds with **501** if invalid `:move` specified
 
 Game will terminate with either a 'You Won' or a 'You Lost' message, after which
 `session_id` will no longer be valid.
@@ -63,7 +63,7 @@ Get the score for the current game sessison
 
     $ curl {{localhost}}/score/5a16a6cf460e84e2f6c581bcf68e719e40ef671e
 
-Responds with **404** if session_id does not exist
+Responds with **404** if `:session_id` does not exist
 
 
 #Credits
