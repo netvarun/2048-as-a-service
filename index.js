@@ -23,11 +23,6 @@ server.get('/state/:session_id/move/:move', function (req, res, next) {
   return next();
 });
 
-server.get('/score/:session_id', function (req, res, next) {
-  res.send(req.params);
-  return next();
-});
-
 server.listen(8080, function () {
   console.log('%s listening at %s', server.name, server.url);
 });

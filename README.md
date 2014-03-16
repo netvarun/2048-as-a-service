@@ -38,7 +38,7 @@ The actual gameplay functionality.
 `:session_id` is the session id of the game that you got when you started the game.
 `:move` is the next move entered by the user.
 
-There are 4 possible values for `:move`:
+There are 4 possible values for `:move` -
 
 `0` for UP
 
@@ -60,11 +60,15 @@ Game will terminate with either a 'You Won' or a 'You Lost' message, after which
 `session_id` will no longer be valid.
 
 
-#Credits
+#Authors
 
 By [Sivamani Varun](http://www.netvarun.com/) and Srinivas Kidambi.
 
+
+#Credits
+
 2048 was created by [Gabriele Cirulli](http://gabrielecirulli.com). Based on [1024 by Veewo Studio](https://itunes.apple.com/us/app/1024!/id823499224) and conceptually similar to [Threes by Asher Vollmer](http://asherv.com/threes/).
+
 The heart of this project is the 2048 game engine, which was extracted from the original 2048 with some modifications.
 
 #License
