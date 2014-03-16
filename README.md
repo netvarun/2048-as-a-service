@@ -55,21 +55,13 @@ Game will terminate with either a 'You Won' or a 'You Lost' message, after which
 `session_id` will no longer be valid.
 
 
-## GET /score/:session_id
-
-Get the score for the current game sessison
-
-#### example request
-
-    $ curl {{localhost}}/score/5a16a6cf460e84e2f6c581bcf68e719e40ef671e
-
-Responds with **404** if `:session_id` does not exist
-
-
 #Credits
+
 Random weekend project by [Sivamani Varun](http://www.netvarun.com/) and Srinivas Kidambi
+Code mainly based on the original 2048, with slight modifications.
 
 2048 was created by [Gabriele Cirulli](http://gabrielecirulli.com). Based on [1024 by Veewo Studio](https://itunes.apple.com/us/app/1024!/id823499224) and conceptually similar to [Threes by Asher Vollmer](http://asherv.com/threes/).
+
 
 #License
 MIT
