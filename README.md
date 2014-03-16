@@ -39,10 +39,11 @@ The actual gameplay functionality.
 `:move` is the next move entered by the user.
 
 There are 4 possible values for `:move`:
-`1` for UP
+
+`0` for UP
+`1` for RIGHT
 `2` for DOWN
 `3` for LEFT
-`4` for RIGHT
 
 #### example request
 
@@ -57,11 +58,10 @@ Game will terminate with either a 'You Won' or a 'You Lost' message, after which
 
 #Credits
 
-Random weekend project by [Sivamani Varun](http://www.netvarun.com/) and Srinivas Kidambi
-Code mainly based on the original 2048, with slight modifications.
-
 2048 was created by [Gabriele Cirulli](http://gabrielecirulli.com). Based on [1024 by Veewo Studio](https://itunes.apple.com/us/app/1024!/id823499224) and conceptually similar to [Threes by Asher Vollmer](http://asherv.com/threes/).
 
+This was a random weekend project by [Sivamani Varun](http://www.netvarun.com/) and Srinivas Kidambi.
+The heart of this project is the 2048 game engine, which was extracted from the original 2048 with some modifications.
 
 #License
 MIT
