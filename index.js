@@ -33,6 +33,7 @@ server.get('/start', function (req, res, next) {
             //Cache in redis
             client.set(session_id, JSON.stringify(game.serialize()), function (err) {
                 if (!err) {
+                    client.expire(session_id, 3600);
                     res.send(gameState);
                     return next();
                 }
@@ -126,6 +127,7 @@ server.get('/state/:session_id/move/:move', function (req, res, next) {
                                 //Cache in redis
                                 client.set(session_id, JSON.stringify(game.serialize()), function (err) {
                                     if (!err) {
+                                        client.expire(session_id, 3600);
                                         //Get game state
                                         var gameState = game.getState();
                                         gameState['session_id'] = session_id;
@@ -151,6 +153,7 @@ server.get('/state/:session_id/move/:move', function (req, res, next) {
                         //Cache in redis
                         client.set(session_id, JSON.stringify(game.serialize()), function (err) {
                             if (!err) {
+                                client.expire(session_id, 3600);
                                 //Get game state
                                 var gameState = game.getState();
                                 gameState['session_id'] = session_id;
@@ -173,3 +176,20 @@ server.listen(8080, function () {
 function genSession() {
     return crypto.createHash('sha1').update(uuid.v4()).digest('hex');
 }
+//Catch SIGTERM and SIGINT and uncaughtException for graceful shutdown
+process.on( 'SIGTERM', function (err) {
+    console.log('ERROR: Caught SIGTERM: ' + err);
+    client.quit();
+    process.exit(1);
+});
+
+process.on( 'SIGINT', function (err) {
+    console.log('ERROR: Caught SIGINT: ' + err);
+    client.quit();
+    process.exit(1);
+});
+
+process.on('uncaughtException', function (err) {
+    console.log('ERROR: Caught exception: ' + err);
+    util.log(err.stack);
+});
