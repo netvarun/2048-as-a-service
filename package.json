@@ -20,6 +20,9 @@
   },
   "dependencies": {
     "redis": "~0.10.1",
-    "restify": "~2.6.3"
+    "restify": "~2.6.3",
+    "node-cache": "~0.4.1",
+    "crypto": "0.0.3",
+    "node-uuid": "~1.4.1"
   }
 }
