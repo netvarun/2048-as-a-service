@@ -1,16 +1,6 @@
-//TODO:
-//0. Safety checks (done)
-//1. Add timeout to clear out expired game states (done)
-//2. Check for valid session ids (done)
-//3. IP based throttling (done)
-//5. Error codes (done)
-//6. Redirect after start/ to state: (done)
-//7. Beautify function (done)
-//8. Mod the game (done). 
-//9. Quotes (done)
-//10. bunyan logging (done)
-//12. testing
-//13. Update docs
+//2048-as-a-service
+//Author: Sivamani Varun (varun@semantics3.com)
+//Based on https://github.com/gabrielecirulli/2048
 
 var restify = require('restify');
 var util = require('util');
@@ -59,7 +49,7 @@ function startGame(req, res, next) {
     var size = 4;
     var tiles = 2;
     var victory = 11;
-    var rand = 4;
+    var rand = 2;
 
     //Custom game
     if((req.url).match(/\/size\//)) {
@@ -142,6 +132,8 @@ function gameMove(req,res,next) {
     str += 'Grid:\n' + table.toString() + '\n\n';
     str += 'Zen:\n' + gameState['zen'] + '\n';
     console.log(str);
+    console.log(gameState);
+    console.log(game);
 
     //JSON request, so send the gameState object
     if((req.url).match(/\/json/)) {
