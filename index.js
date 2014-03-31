@@ -6,8 +6,8 @@ var restify = require('restify');
 var util = require('util');
 var uuid = require('node-uuid');
 var crypto = require('crypto');
-var Game = require("./lib/game_manager.js").GameManager;
-var starwars = require('starwars');
+var Game = require('./lib/game_manager.js').GameManager;
+var quotes = require('./lib/quotes.js');
 var Table = require('cli-table');
 var bunyan = require('bunyan');
 
@@ -114,7 +114,7 @@ function gameMove(req,res,next) {
 
     var gameState = game.getState();
     gameState['session_id'] = session_id;
-    gameState['zen'] = starwars();
+    gameState['zen'] = quotes();
 
     var table = new Table({
         chars: { 'top': '═' , 'top-mid': '╤' , 'top-left': '╔' , 'top-right': '╗'
@@ -131,6 +131,9 @@ function gameMove(req,res,next) {
     str += 'Overall Score: ' + gameState['score'] +  '\n\n';
     str += 'Grid:\n' + table.toString() + '\n\n';
     str += 'Zen:\n' + gameState['zen'] + '\n';
+    if("message" in gameState) {
+        str += '\nMessage: ' + gameState['message'] + '\n\n';
+    }
     console.log(str);
     console.log(gameState);
     console.log(game);

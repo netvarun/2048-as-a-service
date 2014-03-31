@@ -62,7 +62,7 @@ Game will terminate with either a 'You Won' or a 'You Lost' message, after which
 
 #Authors
 
-By [Sivamani Varun](http://www.netvarun.com/) and Srinivas Kidambi.
+By [Sivamani Varun](http://www.netvarun.com/).
 
 
 #Credits

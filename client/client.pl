@@ -20,5 +20,10 @@ while(1) {
         print STDERR "Invalid move.. w - up, a - left, d - right, s - down\n";
         next;
     }
-    system("curl $host"."state/$session_id/move/$userInput");
+    my $cmd = "curl --silent $host"."state/$session_id/move/$userInput";
+    my $output = `$cmd`;
+    print STDERR "\n$output\n";
+    if($output=~/Message:/si) {
+        exit(0);
+    }
 }

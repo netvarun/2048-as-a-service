@@ -13,7 +13,7 @@
   "keywords": [
     "2048"
   ],
-  "author": "Sivamani Varun, Srinivas Kidambi",
+  "author": "Sivamani Varun",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/netvarun/2048-as-a-service/issues"
@@ -23,7 +23,6 @@
     "crypto": "0.0.3",
     "node-uuid": "~1.4.1",
     "weighted": "~0.2.2",
-    "starwars": "~1.0.0",
     "cli-table": "~0.3.0",
     "bunyan": "~0.22.1"
   }
