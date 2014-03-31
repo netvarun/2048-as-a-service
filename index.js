@@ -3,14 +3,12 @@
 //1. Add timeout to clear out expired game states (done)
 //2. Check for valid session ids (done)
 //3. IP based throttling (done)
-//4. Thanks REST (done)
 //5. Error codes (done)
 //6. Redirect after start/ to state: (done)
 //7. Beautify function (done)
 //8. Mod the game (done). 
 //9. Quotes (done)
-//10. bunyan logging
-//11. params -max_games, -timeout
+//10. bunyan logging (done)
 //12. testing
 //13. Update docs
 
@@ -21,10 +19,11 @@ var crypto = require('crypto');
 var Game = require("./lib/game_manager.js").GameManager;
 var starwars = require('starwars');
 var Table = require('cli-table');
+var bunyan = require('bunyan');
 
 var gameStates = {};
-var MAX_GAMES = 200000;
-var TIMEOUT = 300;
+var MAX_GAMES = 50000; // 50K
+var TIMEOUT = 300; // 5 minutes
 var gameCount = 0;
 
 var server = restify.createServer({
@@ -42,16 +41,12 @@ server.use(restify.acceptParser(server.acceptable));
 server.use(restify.queryParser());
 server.use(restify.bodyParser());
 
-//Check if client has thanked you
-//Obey ZEST principles
-server.pre(function(req, res, next) {
-    if(!((req.url).match(/\/thanks$/))) {
-        console.log("No thanks...");
-        res.send(800, new Error('Please say thanks...'));
-        return next();
-    }
-    return next();
-});
+server.on('after', restify.auditLogger({
+  log: bunyan.createLogger({
+    name: 'audit',
+    stream: process.stdout
+  })
+}));
 
 function startGame(req, res, next) {
     if(gameCount > MAX_GAMES) {
@@ -85,7 +80,7 @@ function startGame(req, res, next) {
             res.send(503, new Error('Victory power cannot be smaller than or equal to rand or be greater than 32'));
             return next();
         }
-        if(move < 0 || move > victory) {
+        if(rand < 0 || rand > victory) {
             res.send(503, new Error('Rand tiles has to be greater than 1 or less than victory'));
             return next();
         }
@@ -94,11 +89,11 @@ function startGame(req, res, next) {
     gameStates[session_id] = new Game(size,tiles,victory,rand);
 
     var json = '';
-    if((req.url).match(/\/json\//)) {
+    if((req.url).match(/\/json/)) {
         json = '/json';
     }
 
-    res.header('Location', '/state/' + session_id + json + '/thanks');
+    res.header('Location', '/state/' + session_id + json);
     res.send(302);
     return next();
 }
@@ -124,11 +119,12 @@ function gameMove(req,res,next) {
             return next();
         }
         game.move(move);
+        console.log("Move made for Session ID: " + session_id + " Move ID: " + move);
     }
 
     var gameState = game.getState();
     gameState['session_id'] = session_id;
-    gameState['inspiration'] = starwars();
+    gameState['zen'] = starwars();
 
     var table = new Table({
         chars: { 'top': '═' , 'top-mid': '╤' , 'top-left': '╔' , 'top-right': '╗'
@@ -144,11 +140,11 @@ function gameMove(req,res,next) {
     var str = 'Session ID: ' + session_id +  '\n';
     str += 'Overall Score: ' + gameState['score'] +  '\n\n';
     str += 'Grid:\n' + table.toString() + '\n\n';
-    str += 'Inspiration:\n' + gameState['inspiration'] + '\n';
+    str += 'Zen:\n' + gameState['zen'] + '\n';
     console.log(str);
 
     //JSON request, so send the gameState object
-    if((req.url).match(/\/json\//)) {
+    if((req.url).match(/\/json/)) {
         res.send(gameState);
         return next();
     }
@@ -159,46 +155,45 @@ function gameMove(req,res,next) {
 }
 
 //Routes
-server.get('/start/thanks', startGame);
-server.get('/start/json/thanks', startGame);
-server.get('/start/size/:size/tiles/:tiles/victory/:victory/rand/:rand/thanks', startGame);
-server.get('/start/size/:size/tiles/:tiles/victory/:victory/rand/:rand/json/thanks', startGame);
+server.get('/start', startGame);
+server.get('/start/json', startGame);
 
-server.get('/state/:session_id/thanks',gameMove);
-server.get('/state/:session_id/move/:move/thanks',gameMove);
-server.get('/state/:session_id/json/thanks',gameMove);
-server.get('/state/:session_id/move/:move/json/thanks',gameMove);
+server.get('/start/size/:size/tiles/:tiles/victory/:victory/rand/:rand', startGame);
+server.get('/start/size/:size/tiles/:tiles/victory/:victory/rand/:rand/json', startGame);
 
-server.get('/inspiration/thanks', function (req, res, next) {
-    var msg = {};
-    msg['inspiration'] = starwars();
-    res.send(obj);
-    return next();
-});
+server.get('/state/:session_id',gameMove);
+server.get('/state/:session_id/json',gameMove);
+
+server.get('/state/:session_id/move/:move',gameMove);
+server.get('/state/:session_id/move/:move/json',gameMove);
 
 server.listen(8080, function () {
     console.log('%s listening at %s', server.name, server.url);
 });
 
 function genSession() {
-    gameCount++;
-    return crypto.createHash('sha1').update(uuid.v4()).digest('hex');
+    var session_id = crypto.createHash('sha1').update(uuid.v4()).digest('hex');
+    gameCount++; // Increment game count
+    console.log("New session requested. Game count: " + gameCount + " Session ID: " + session_id);
+    return session_id;
 }
 
 //Delete all game sessions that were inactive for 5 minutes
 function clearInactiveGames() {
     var curTime = Math.round(+new Date()/1000);
+    console.log("Game state clean up kicking in. Timestamp: " + curTime + " Game count: " + gameCount);
     for(var game_session in gameStates){
         var game = gameStates[game_session];
         if(game.getLastActive() < (curTime - TIMEOUT)) {
             //Hackish way of keeping count
            gameCount--;
+           console.log("Deleting session_id: " + game_session + " Timestamp: " + game.getLastActive());
            delete gameStates[game_session];
         }
     }
 }
 
-setInterval (clearInactiveGames, TIMEOUT*100);
+setInterval (clearInactiveGames, TIMEOUT*1000);
 
 //Catch SIGTERM and SIGINT and uncaughtException for graceful shutdown
 process.on( 'SIGTERM', function (err) {

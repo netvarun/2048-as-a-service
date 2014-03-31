@@ -24,6 +24,7 @@
     "node-uuid": "~1.4.1",
     "weighted": "~0.2.2",
     "starwars": "~1.0.0",
-    "cli-table": "~0.3.0"
+    "cli-table": "~0.3.0",
+    "bunyan": "~0.22.1"
   }
 }
