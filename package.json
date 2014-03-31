@@ -19,10 +19,11 @@
     "url": "https://github.com/netvarun/2048-as-a-service/issues"
   },
   "dependencies": {
-    "redis": "~0.10.1",
     "restify": "~2.6.3",
-    "node-cache": "~0.4.1",
     "crypto": "0.0.3",
-    "node-uuid": "~1.4.1"
+    "node-uuid": "~1.4.1",
+    "weighted": "~0.2.2",
+    "starwars": "~1.0.0",
+    "cli-table": "~0.3.0"
   }
 }
