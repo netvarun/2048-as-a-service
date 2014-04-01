@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-my $host = "http://localhost:8080/";
+my $host = "http://localhost:8080/hi/";
 
 #--Start game
 my $cmd = "curl --silent -L $host"."start";

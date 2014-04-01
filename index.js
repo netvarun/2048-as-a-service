@@ -10,6 +10,7 @@ var Game = require('./lib/game_manager.js').GameManager;
 var quotes = require('./lib/quotes.js');
 var Table = require('cli-table');
 var bunyan = require('bunyan');
+var punycode = require('punycode');
 
 var gameStates = {};
 var MAX_GAMES = 50000; // 50K
@@ -37,6 +38,20 @@ server.on('after', restify.auditLogger({
     stream: process.stdout
   })
 }));
+
+
+//Obey ZEST principles
+//All requests start with /hi
+//Throw 800 if it didn't
+server.pre(function(req, res, next) {
+    if(!((req.url).match(/^\/hi\//))) {
+        console.log(req.url);
+        console.log("No hi...");
+        res.send(800, new Error('Please say hi...'));
+        return next();
+    }
+    return next();
+});
 
 function startGame(req, res, next) {
     if(gameCount > MAX_GAMES) {
@@ -83,7 +98,7 @@ function startGame(req, res, next) {
         json = '/json';
     }
 
-    res.header('Location', '/state/' + session_id + json);
+    res.header('Location', '/hi/state/' + session_id + json);
     res.send(302);
     return next();
 }
@@ -117,19 +132,33 @@ function gameMove(req,res,next) {
     gameState['zen'] = quotes();
 
     var table = new Table({
-        chars: { 'top': '═' , 'top-mid': '╤' , 'top-left': '╔' , 'top-right': '╗'
-         , 'bottom': '═' , 'bottom-mid': '╧' , 'bottom-left': '╚' , 'bottom-right': '╝'
-         , 'left': '║' , 'left-mid': '╟' , 'mid': '─' , 'mid-mid': '┼'
-         , 'right': '║' , 'right-mid': '╢' , 'middle': '│' }
-    });
+chars: {
+top: '-',
+'top-mid':'+',
+'top-left':'+',
+'top-right':'+',
+bottom: '-',
+'bottom-mid':'+',
+'bottom-left':'+',
+'bottom-right':'+',
+left: '|',
+'left-mid': '|',
+mid: '-',
+'mid-mid': '+',
+right: '|',
+'right-mid': '+'
+}}
+);
 
     for(var i in gameState['grid']) {
         table.push(gameState['grid'][i]);
     }
 
+    var tableData = table.toString();
+
     var str = 'Session ID: ' + session_id +  '\n';
     str += 'Overall Score: ' + gameState['score'] +  '\n\n';
-    str += 'Grid:\n' + table.toString() + '\n\n';
+    str += 'Grid:\n' + tableData + '\n\n';
     str += 'Zen:\n' + gameState['zen'] + '\n';
     if("message" in gameState) {
         str += '\nMessage: ' + gameState['message'] + '\n\n';
@@ -150,17 +179,17 @@ function gameMove(req,res,next) {
 }
 
 //Routes
-server.get('/start', startGame);
-server.get('/start/json', startGame);
+server.get('/hi/start', startGame);
+server.get('/hi/start/json', startGame);
 
-server.get('/start/size/:size/tiles/:tiles/victory/:victory/rand/:rand', startGame);
-server.get('/start/size/:size/tiles/:tiles/victory/:victory/rand/:rand/json', startGame);
+server.get('/hi/start/size/:size/tiles/:tiles/victory/:victory/rand/:rand', startGame);
+server.get('/hi/start/size/:size/tiles/:tiles/victory/:victory/rand/:rand/json', startGame);
 
-server.get('/state/:session_id',gameMove);
-server.get('/state/:session_id/json',gameMove);
+server.get('/hi/state/:session_id',gameMove);
+server.get('/hi/state/:session_id/json',gameMove);
 
-server.get('/state/:session_id/move/:move',gameMove);
-server.get('/state/:session_id/move/:move/json',gameMove);
+server.get('/hi/state/:session_id/move/:move',gameMove);
+server.get('/hi/state/:session_id/move/:move/json',gameMove);
 
 server.listen(8080, function () {
     console.log('%s listening at %s', server.name, server.url);
