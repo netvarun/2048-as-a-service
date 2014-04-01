@@ -5,8 +5,6 @@ Build powerful 2048 gameplay apps with our simple 2048-as-a-service API.
 Integrate 2048-functionality into your bash scripts, SoLoMo (social-local-mobile) apps and
 internet-of-things devices!
 
-For the below examples to work in your system replace `api.semantics3.com` with a suitable `<host>:<port>`.
-
 # Test it out
 This API is currently running live on http://2048.semantics3.com/
 
@@ -19,6 +17,8 @@ or this to start a full fledged text-based 2048 game session - (a sexy perl one-
     perl -e 'my $host = "http://2048.semantics3.com/hi/";my $cmd = "curl --silent -L $host"."start";my $output = `$cmd`;my $session_id = $output;$session_id=~s/.*?ID:\s(\w+).*/$1/si;my %keyMap = ( 'w' => 0, 'd' => 1, 's' => 2, 'a' => 3);print STDERR $output,"\n";while(1) { print STDERR "Input (w - up, a - left, d - right, s - down):\n"; my $userInput = <STDIN>; chomp ($userInput); if(defined($keyMap{$userInput})) { $userInput = $keyMap{$userInput}; } else { print STDERR "Invalid move.. w - up, a - left, d - right, s - down\n"; next; } my $cmd = "curl --silent $host"."state/$session_id/move/$userInput"; my $output = `$cmd`; print STDERR "\n$output\n"; if($output=~/Message:/si) { exit(0); }}'
 
 # The API
+
+For the below examples to work in your system replace `api.semantics3.com` with a suitable `<host>:<port>`
 
 ####API Modes
 2048-as-a-services supports two modes:
