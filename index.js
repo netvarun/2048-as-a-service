@@ -169,11 +169,11 @@ right: '|',
 
     //JSON request, so send the gameState object
     if((req.url).match(/\/json/)) {
+        res.header('Access-Control-Allow-Origin', '*');
         res.send(gameState);
         return next();
     }
 
-    res.header('Access-Control-Allow-Origin', '*');
     res.contentType = 'text';
     res.send(str);
     return next();
