@@ -10,7 +10,7 @@ For the below examples to work in your system replace `api.semantics3.com` with 
 # Test it out
 This API is currently running live on http://2048.semantics3.com/
 
-Type this command on the command line [full example](####full-example-gameplay)
+Type this command on the command line [full example](#full-example-gameplay)
 
     curl  -L 2048.semantics3.com/hi/start
 
