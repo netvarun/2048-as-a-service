@@ -109,7 +109,7 @@ function gameMove(req,res,next) {
 
     //Check if session id exists
     if(!(session_id in gameStates)) {
-        res.send(503, new Error('Invalid session id or session id has already expired.'));
+        res.send(404, new Error('Invalid session id or session id has already expired.'));
         return next();
     }
 
@@ -173,6 +173,7 @@ right: '|',
         return next();
     }
 
+    res.header('Access-Control-Allow-Origin', '*');
     res.contentType = 'text';
     res.send(str);
     return next();
