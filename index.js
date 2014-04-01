@@ -191,7 +191,7 @@ server.get('/hi/state/:session_id/json',gameMove);
 server.get('/hi/state/:session_id/move/:move',gameMove);
 server.get('/hi/state/:session_id/move/:move/json',gameMove);
 
-server.listen(8080, function () {
+server.listen(80, function () {
     console.log('%s listening at %s', server.name, server.url);
 });
 
