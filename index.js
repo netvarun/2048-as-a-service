@@ -98,6 +98,7 @@ function startGame(req, res, next) {
         json = '/json';
     }
 
+    res.header('Access-Control-Allow-Origin', '*');
     res.header('Location', '/hi/state/' + session_id + json);
     res.send(302);
     return next();
