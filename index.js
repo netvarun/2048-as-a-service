@@ -10,7 +10,6 @@ var Game = require('./lib/game_manager.js').GameManager;
 var quotes = require('./lib/quotes.js');
 var Table = require('cli-table');
 var bunyan = require('bunyan');
-var punycode = require('punycode');
 
 var gameStates = {};
 var MAX_GAMES = 50000; // 50K
@@ -77,15 +76,15 @@ function startGame(req, res, next) {
             res.send(503, new Error('Size can only be between 3 and 16.'));
             return next();
         }
-        if(tiles < 0 || tiles > (size*size/2)) {
+        if(tiles < 1 || tiles > (size*size/2)) {
             res.send(503, new Error('Number of intial tiles can only be between 1 to size^2/2'));
             return next();
         }
-        if(victory <= rand || victory > 32) {
+        if(victory <= 10 || victory > 32) {
             res.send(503, new Error('Victory power cannot be smaller than or equal to rand or be greater than 32'));
             return next();
         }
-        if(rand < 0 || rand > victory) {
+        if(rand < 1 || rand >= victory) {
             res.send(503, new Error('Rand tiles has to be greater than 1 or less than victory'));
             return next();
         }
@@ -193,7 +192,7 @@ server.get('/hi/state/:session_id/json',gameMove);
 server.get('/hi/state/:session_id/move/:move',gameMove);
 server.get('/hi/state/:session_id/move/:move/json',gameMove);
 
-server.listen(80, function () {
+server.listen(8080, function () {
     console.log('%s listening at %s', server.name, server.url);
 });
 

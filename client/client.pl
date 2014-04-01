@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-my $host = "http://localhost:8080/hi/";
+my $host = "http://2048.semantics3.com/hi/";
 
 #--Start game
 my $cmd = "curl --silent -L $host"."start";
